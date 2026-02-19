@@ -1,0 +1,41 @@
+[project]
+name = "promotional-copy-generation"
+version = "0.1.0"
+description = "AI Agent for generating promotional copy with LangGraph, Skills and MCP"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    # LangGraph & LangChain (all local models, no external API calls)
+    "langgraph>=0.2.0",
+    "langchain>=0.3.0",
+    "langchain-core>=0.3.0",
+    "langchain-community>=0.3.0",   # Local models (Ollama etc.)
+    "langchain-openai>=0.2.0",     # vLLM via OpenAI-compatible API
+    "langchain-mcp-adapters>=0.2.0",
+    # API Server
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "python-multipart>=0.0.12",
+    # Data & Config
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.6.0",
+    "pyyaml>=6.0",
+    # Image Processing (upload decode, format validation, etc.)
+    "pillow>=11.0.0",
+    # Async & HTTP
+    "httpx>=0.28.0",
+    "aiofiles>=24.1.0",
+    # Observability & Resilience
+    "structlog>=24.4.0",
+    "tenacity>=9.0.0",
+]
+
+[project.scripts]
+promotional-copy = "promotional_copy_generation.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["promotional_copy_generation"]
