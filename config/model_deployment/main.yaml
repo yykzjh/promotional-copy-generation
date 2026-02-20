@@ -1,0 +1,15 @@
+# Agent 主模型 (文本生成文本) - vLLM 部署
+# Qwen/Qwen3-30B-A3B-Instruct-2507-FP8
+
+model_id: "Qwen/Qwen3-30B-A3B-Instruct-2507-FP8"
+backend: vllm
+
+# vLLM 启动参数 (对应 .env 中 LLM_MAIN_BASE_URL 的服务)
+vllm:
+  host: "0.0.0.0"
+  port: 8000
+  # 多 GPU 时设置 tensor_parallel_size
+  tensor_parallel_size: 1
+  # 可选: gpu_memory_utilization, max_model_len 等
+  gpu_memory_utilization: 0.9
+  max_model_len: 8192

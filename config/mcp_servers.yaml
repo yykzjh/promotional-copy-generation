@@ -1,0 +1,24 @@
+# MCP Servers configuration - enable as needed
+# See docs for transport types: stdio, http, sse
+# tools_filter: optional list of tool names to expose (omit to expose all)
+# stage_tools: optional fallback stage->tool_names when stage_contexts has no mcp_tools
+
+servers:
+  xiaohongshu:
+    enabled: false
+    transport: stdio
+    command: npx
+    args: ["-y", "@some/xiaohongshu-mcp-server"]
+    env:
+      XHS_API_KEY: ${XHS_API_KEY}
+    tools_filter: ["search_similar_copies", "get_trending_topics"]
+
+  weibo:
+    enabled: false
+    transport: http
+    url: ${WEIBO_MCP_URL}
+    tools_filter: ["search_posts"]
+
+# Optional: stage_tools as fallback when stages.<stage>.mcp_tools not set
+# stage_tools:
+#   context_enhance: ["search_similar_copies", "get_trending_topics"]

@@ -1,0 +1,20 @@
+# Stage context configuration - simplified multimodal flow
+# mcp_tools: optional list of MCP tool names for this stage (when MCP servers configured)
+
+stages:
+  context_enhance:
+    prompt_template: "prompts/context_enhance.txt"
+    skills: []
+    # mcp_tools: ["search_similar_copies", "get_trending_topics"]  # enable when MCP server ready
+
+  copy_write:
+    prompt_template: "prompts/copy_write.txt"
+    skills: ["copy_writing", "platform_rules"]
+
+  image_prompt:
+    prompt_template: "prompts/image_prompt.txt"
+    skills: ["image_prompt"]
+    negative_prompt: "ugly, blurry, low quality"
+
+  image_gen:
+    prompt_template: "prompts/image_gen.txt"

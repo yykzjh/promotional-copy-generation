@@ -1,0 +1,23 @@
+# 文本生成图像模型 - diffusers 部署
+# Qwen/Qwen-Image-2512 (Diffusion 架构)
+
+model_id: "Qwen/Qwen-Image-2512"
+backend: diffusers
+
+# Agent 调用图像生成 API 时的默认参数 (image_generator 使用)
+agent:
+  default_size: "1024x1024"  # 传给 API 的 size，格式 widthxheight
+
+# diffusers 服务参数 (对应 .env 中 LLM_IMAGE_GEN_BASE_URL 的服务)
+diffusers:
+  host: "0.0.0.0"
+  port: 8002
+  # 推理参数
+  torch_dtype: "bfloat16"  # bfloat16 | float16 | float32
+  device: "cuda"
+  # 默认生成参数
+  default_width: 1024
+  default_height: 1024
+  num_inference_steps: 50
+  true_cfg_scale: 4.0
+  default_negative_prompt: "低分辨率，低画质，肢体畸形，手指畸形，画面过饱和，蜡像感。"

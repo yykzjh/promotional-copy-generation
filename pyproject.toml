@@ -30,6 +30,16 @@ dependencies = [
     "tenacity>=9.0.0",
 ]
 
+[project.optional-dependencies]
+model-deployment = [
+    "vllm>=0.6.0",
+    "diffusers>=0.32.0",
+    "transformers>=4.45.0",
+    "torch>=2.4.0",
+    "accelerate>=0.34.0",
+    "safetensors>=0.4.0",
+]
+
 [project.scripts]
 promotional-copy = "promotional_copy_generation.main:main"
 

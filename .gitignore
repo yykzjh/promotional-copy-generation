@@ -1,12 +1,18 @@
-
-
-# .cursor (ignore all except skills)
+# .cursor
 .cursor/*
 !.cursor/skills/
 
 # uv
 .venv/
 
+# env
+.env
+
+# vscode
+.vscode/
+
+# python
+__pycache__/
 
 # gitignore template for LangChain products, e.g., LangGraph, LangSmith
 # website: https://www.langchain.com/
