@@ -28,6 +28,7 @@ dependencies = [
     # Observability & Resilience
     "structlog>=24.4.0",
     "tenacity>=9.0.0",
+    "huggingface-hub>=0.36.2",
 ]
 
 [project.optional-dependencies]
@@ -42,6 +43,10 @@ model-deployment = [
 
 [project.scripts]
 promotional-copy = "promotional_copy_generation.main:main"
+
+[[tool.uv.index]]
+url = "https://mirrors.aliyun.com/pypi/simple/"
+default = true
 
 [build-system]
 requires = ["hatchling"]

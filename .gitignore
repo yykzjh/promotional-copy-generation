@@ -1,3 +1,6 @@
+# models
+models/
+
 # .cursor
 .cursor/*
 !.cursor/skills/
