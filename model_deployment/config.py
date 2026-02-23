@@ -89,15 +89,16 @@ def get_diffusers_server_params(overrides: dict[str, Any] | None = None) -> dict
 
 
 def get_diffusers_pipeline_params() -> dict[str, Any]:
-    """Get diffusers pipeline load params (model_id, device, torch_dtype)."""
+    """Get diffusers pipeline load params (model_id, device, torch_dtype, device_map)."""
     cfg = _load_config("image_gen")
     model_id = cfg.get("model_id", "Qwen/Qwen-Image-2512")
     diff = cfg.get("diffusers", {})
-    dtype_map = {"bfloat16": "bfloat16", "float16": "float16", "float32": "float32"}
     return {
         "model_id": model_id,
         "device": diff.get("device", "cuda"),
         "torch_dtype": diff.get("torch_dtype", "bfloat16"),
+        "device_map": diff.get("device_map"),  # "balanced" | "auto" for multi-GPU
+        "gpu_ids": diff.get("gpu_ids"),  # [0, 1] 指定使用的 GPU
     }
 
 

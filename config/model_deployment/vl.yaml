@@ -1,7 +1,6 @@
 # 多模态模型 (图像+文本生成文本) - vLLM 部署
-# Qwen/Qwen3-VL-8B-Instruct-FP8
 
-model_id: "Qwen/Qwen3-VL-8B-Instruct-FP8"
+model_id: "models/Qwen3-VL-8B-Instruct-FP8"
 backend: vllm
 
 # vLLM 启动参数 (对应 .env 中 VLM_TEXT_GEN_BASE_URL 的服务)

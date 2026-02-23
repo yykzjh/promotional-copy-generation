@@ -41,6 +41,7 @@ def _load_pipeline():
     model_id = params.get("model_id", "Qwen/Qwen-Image-2512")
     device = params.get("device", "cuda")
     dtype_str = params.get("torch_dtype", "bfloat16")
+    device_map = params.get("device_map")
 
     import torch
     from diffusers import DiffusionPipeline
@@ -48,8 +49,16 @@ def _load_pipeline():
     dtype_map = {"bfloat16": torch.bfloat16, "float16": torch.float16, "float32": torch.float32}
     torch_dtype = dtype_map.get(dtype_str, torch.bfloat16)
 
-    logger.info("Loading pipeline %s on %s", model_id, device)
-    _pipe = DiffusionPipeline.from_pretrained(model_id, torch_dtype=torch_dtype).to(device)
+    load_kwargs: dict[str, Any] = {"torch_dtype": torch_dtype}
+    if device_map:
+        load_kwargs["device_map"] = device_map
+        logger.info("Loading pipeline %s with device_map=%s", model_id, device_map)
+    else:
+        logger.info("Loading pipeline %s on %s", model_id, device)
+
+    _pipe = DiffusionPipeline.from_pretrained(model_id, **load_kwargs)
+    if not device_map:
+        _pipe = _pipe.to(device)
     return _pipe
 
 
@@ -78,6 +87,9 @@ async def images_generations(req: dict[str, Any]):
         pipe = _load_pipeline()
         import torch
 
+        gen_device = getattr(pipe, "device", None) or "cuda"
+        generator = torch.Generator(device=gen_device).manual_seed(42)
+
         result = pipe(
             prompt=prompt,
             negative_prompt=negative_prompt,
@@ -86,7 +98,7 @@ async def images_generations(req: dict[str, Any]):
             num_inference_steps=num_inference_steps,
             true_cfg_scale=true_cfg_scale,
             num_images_per_prompt=n,
-            generator=torch.Generator(device=pipe.device).manual_seed(42),
+            generator=generator,
         )
 
         images = result.images
@@ -107,6 +119,15 @@ async def health():
 
 
 def main():
+    import os
+
+    # 必须在 import torch 之前设置，才能限定可见 GPU
+    params = get_diffusers_pipeline_params()
+    if gpu_ids := params.get("gpu_ids"):
+        gpu_str = ",".join(str(x) for x in gpu_ids)
+        os.environ["CUDA_VISIBLE_DEVICES"] = gpu_str
+        logger.info("Using GPUs: %s", gpu_str)
+
     import argparse
 
     parser = argparse.ArgumentParser(description="Diffusers image generation server")
@@ -122,6 +143,11 @@ def main():
 
     params = get_diffusers_server_params(overrides)
     import uvicorn
+
+    # 启动时预加载权重，避免首次请求等待
+    logger.info("Preloading pipeline at startup...")
+    _load_pipeline()
+    logger.info("Pipeline ready, starting server")
 
     uvicorn.run(app, host=params["host"], port=params["port"])
 

@@ -1,7 +1,6 @@
 # 文本生成图像模型 - diffusers 部署
-# Qwen/Qwen-Image-2512 (Diffusion 架构)
 
-model_id: "Qwen/Qwen-Image-2512"
+model_id: "models/Qwen-Image-2512"
 backend: diffusers
 
 # Agent 调用图像生成 API 时的默认参数 (image_generator 使用)
@@ -14,8 +13,9 @@ diffusers:
   port: 8002
   # 推理参数
   torch_dtype: "bfloat16"  # bfloat16 | float16 | float32
-  device: "cuda"
-  # 默认生成参数
+  # device: "cuda"
+  gpu_ids: [0, 1, 2, 3]  # 指定使用的 GPU，如 [0,1] 表示只用 GPU 0 和 1；不设置则使用全部
+  device_map: "balanced"  # 多 GPU 时启用，可选 "balanced" | "auto"；与 device 二选一
   default_width: 1024
   default_height: 1024
   num_inference_steps: 50
